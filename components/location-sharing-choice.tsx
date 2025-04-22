@@ -26,7 +26,7 @@ export function LocationSharingChoice({ onClose, onChoice }: LocationSharingChoi
       >
         <Card className="border-2 border-datequest-dark overflow-hidden">
           <CardContent className="p-0">
-            <div className="bg-datequest-dark p-4 text-black relative">
+            <div className="bg-datequest-dark p-4 text-white relative">
               <Button
                 variant="ghost"
                 size="icon"

@@ -51,7 +51,7 @@ export default function QuestActivePage() {
     setShowLocationChoice(true)
   }
 
-  const handleLocationChoice = (choice) => {
+  const handleLocationChoice = (choice: "mine" | "theirs") => {
     setShowLocationChoice(false)
     setStage("quest")
   }
@@ -210,7 +210,7 @@ export default function QuestActivePage() {
                   id={questCards[currentCard].id}
                   title={questCards[currentCard].title}
                   description={questCards[currentCard].description}
-                  category={questCards[currentCard].category}
+                  category={questCards[currentCard].category as "creative" | "social" | "adventure"}
                   points={questCards[currentCard].points}
                   onComplete={handleCardComplete}
                   cardNumber={currentCard + 1}

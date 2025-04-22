@@ -6,7 +6,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Check, Clock } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
-export default function ArrivalConfirmation({ onComplete }) {
+interface ArrivalConfirmationProps {
+  onComplete: () => void
+}
+
+export default function ArrivalConfirmation({ onComplete }: ArrivalConfirmationProps) {
   const [userArrived, setUserArrived] = useState(false)
   const [partnerArrived, setPartnerArrived] = useState(false)
   const [bothArrived, setBothArrived] = useState(false)
