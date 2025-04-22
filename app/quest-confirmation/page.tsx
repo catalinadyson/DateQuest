@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, MapPin, Users, Share2, Navigation, ExternalLink } from "lucide-react"
+import { ArrowLeft, MapPin, Users, Share2, Navigation, ExternalLink, Clock, Check } from "lucide-react"
 import { ShareContacts } from "@/components/share-contacts"
 import { DatePlanner } from "@/components/date-planner"
 import { LocationReveal } from "@/components/location-reveal"
@@ -17,6 +17,10 @@ export default function QuestConfirmationPage() {
   const [dateTimeSelected, setDateTimeSelected] = useState(false)
   const [showShareContacts, setShowShareContacts] = useState(false)
   const [showPhoneChoice, setShowPhoneChoice] = useState(false)
+  const [waitingForConfirmation, setWaitingForConfirmation] = useState(false)
+  const [dateConfirmed, setDateConfirmed] = useState(false)
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const [selectedTime, setSelectedTime] = useState<string | null>(null)
 
   // Mock data for the quest
   const questData = {
@@ -35,13 +39,18 @@ export default function QuestConfirmationPage() {
     router.back()
   }
 
-  // Modified to immediately show location reveal after date selection
-  const handleDateSelected = (date, time) => {
+  // Modified to show confirmation step after date selection
+  const handleDateSelected = (date: Date, time: string) => {
+    setSelectedDate(date)
+    setSelectedTime(time)
     setDateTimeSelected(true)
-    // Show location reveal animation after a short delay
+    setWaitingForConfirmation(true)
+
+    // Simulate partner confirmation after 3 seconds
     setTimeout(() => {
-      setShowLocationReveal(true)
-    }, 500)
+      setWaitingForConfirmation(false)
+      setDateConfirmed(true)
+    }, 3000)
   }
 
   // Handle when location reveal animation completes
@@ -56,13 +65,18 @@ export default function QuestConfirmationPage() {
   }
 
   // Handle phone choice
-  const handlePhoneChoice = (choice) => {
+  const handlePhoneChoice = (choice: string) => {
     router.push(`/quest-active?phone=${choice}`)
   }
 
   // Open maps app with the location
   const openMaps = (isAppleMaps = true) => {
     window.open(isAppleMaps ? questData.mapUrl : questData.googleMapsUrl, "_blank")
+  }
+
+  // Handle view location after date is confirmed
+  const handleViewLocation = () => {
+    setShowLocationReveal(true)
   }
 
   return (
@@ -117,6 +131,68 @@ export default function QuestConfirmationPage() {
                   partnerImage="/images/alex-profile.png"
                 />
               </div>
+            </div>
+          ) : waitingForConfirmation ? (
+            <div className="space-y-4">
+              <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 text-center">
+                <Clock className="h-6 w-6 text-amber-600 mx-auto mb-2" />
+                <h3 className="font-medium text-amber-800 mb-2">Waiting for Confirmation</h3>
+                <p className="text-sm text-amber-700 mb-3">
+                  {questData.matchName} needs to confirm the date and time before you can proceed.
+                </p>
+                <div className="w-full bg-amber-200 rounded-full h-2">
+                  <div className="bg-amber-500 h-2 rounded-full animate-pulse w-1/2"></div>
+                </div>
+                <div className="mt-4 bg-white p-3 rounded-lg border border-amber-200">
+                  <p className="text-sm font-medium">
+                    {selectedDate?.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+                  </p>
+                  <p className="text-sm text-gray-500">{selectedTime}</p>
+                </div>
+              </div>
+
+              <Button
+                variant="outline"
+                className="w-full border-datequest-dark text-datequest-dark hover:bg-datequest-lime/20"
+                onClick={handleBack}
+              >
+                Cancel
+              </Button>
+            </div>
+          ) : dateConfirmed && !locationRevealed ? (
+            <div className="space-y-4">
+              <div className="bg-green-50 p-4 rounded-lg border border-green-200 text-center">
+                <div className="w-12 h-12 rounded-full bg-green-100 mx-auto mb-2 flex items-center justify-center">
+                  <Check className="h-6 w-6 text-green-600" />
+                </div>
+                <h3 className="font-medium text-green-800 mb-2">Date Confirmed!</h3>
+                <p className="text-sm text-green-700 mb-3">
+                  {questData.matchName} has confirmed the date and time. You're all set!
+                </p>
+                <div className="mt-2 bg-white p-3 rounded-lg border border-green-200">
+                  <p className="text-sm font-medium">
+                    {selectedDate?.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+                  </p>
+                  <p className="text-sm text-gray-500">{selectedTime}</p>
+                </div>
+              </div>
+
+              <Button
+                className="w-full bg-datequest-teal-500 hover:bg-datequest-teal-600 text-white"
+                onClick={handleViewLocation}
+              >
+                <MapPin className="h-4 w-4 mr-1" />
+                Reveal Location
+              </Button>
+
+              <Button
+                variant="default"
+                className="w-full bg-datequest-teal-500 text-white hover:bg-datequest-teal-600"
+                onClick={() => setShowShareContacts(true)}
+              >
+                <Share2 className="h-4 w-4 mr-1" />
+                Share Details
+              </Button>
             </div>
           ) : locationRevealed ? (
             <div className="space-y-4">

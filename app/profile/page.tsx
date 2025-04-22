@@ -2,12 +2,27 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Heart, MessageCircle, User, Calendar, Settings, Edit, LogOut, Plus, X, Check, Gift, Award } from "lucide-react"
+import {
+  Heart,
+  MessageCircle,
+  User,
+  Calendar,
+  Settings,
+  Edit,
+  LogOut,
+  Plus,
+  X,
+  Check,
+  Gift,
+  Award,
+  Lock,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { motion } from "framer-motion"
+import { AchievementBadge } from "@/components/achievement-badge"
 
 export default function ProfilePage() {
   const [userData, setUserData] = useState(null)
@@ -17,6 +32,71 @@ export default function ProfilePage() {
   const [level, setLevel] = useState("Novice Explorer")
   const [completedQuests, setCompletedQuests] = useState(5)
   const [instagramConnected, setInstagramConnected] = useState(false)
+  const [editingInterests, setEditingInterests] = useState(false)
+
+  // Achievements data
+  const earnedAchievements = [
+    {
+      id: "first_quest",
+      name: "First Steps",
+      description: "Completed your first quest",
+      icon: <Award />,
+      color: "bg-blue-500",
+    },
+    {
+      id: "creative_1",
+      name: "Creative Explorer",
+      description: "Completed your first creative quest",
+      icon: <Award />,
+      color: "bg-purple-500",
+    },
+    {
+      id: "weekend_warrior",
+      name: "Weekend Warrior",
+      description: "Completed a quest on a weekend",
+      icon: <Award />,
+      color: "bg-red-500",
+    },
+  ]
+
+  // Unlockable achievements with silly names
+  const unlockableAchievements = [
+    {
+      id: "selfie_king",
+      name: "Selfie Royalty",
+      description: "Take 10 selfies during quests",
+      icon: <Lock />,
+      color: "bg-gray-400",
+    },
+    {
+      id: "art_whisperer",
+      name: "Art Whisperer",
+      description: "Successfully explain 5 abstract paintings",
+      icon: <Lock />,
+      color: "bg-gray-400",
+    },
+    {
+      id: "coffee_addict",
+      name: "Caffeinated Cupid",
+      description: "Visit 3 different coffee shops on dates",
+      icon: <Lock />,
+      color: "bg-gray-400",
+    },
+    {
+      id: "museum_ninja",
+      name: "Museum Ninja",
+      description: "Complete a museum quest without talking to any staff",
+      icon: <Lock />,
+      color: "bg-gray-400",
+    },
+    {
+      id: "awkward_silence",
+      name: "Silence Slayer",
+      description: "Successfully navigate through 3 awkward silences",
+      icon: <Lock />,
+      color: "bg-gray-400",
+    },
+  ]
 
   useEffect(() => {
     // Load user data from localStorage
@@ -58,8 +138,6 @@ export default function ProfilePage() {
   const handleConnectInstagram = () => {
     setInstagramConnected(true)
   }
-
-  const [editingInterests, setEditingInterests] = useState(false)
 
   // Get personality type description
   const getPersonalityDescription = (type) => {
@@ -159,7 +237,7 @@ export default function ProfilePage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex items-center gap-1 border-datequest-teal-500 text-datequest-teal-500 hover:bg-datequest-teal-50 bg-white"
+                    className="flex items-center gap-1 border-datequest-teal-500 text-white bg-datequest-teal-500 hover:bg-datequest-teal-600"
                   >
                     <Edit className="h-4 w-4" />
                     Edit
@@ -274,13 +352,85 @@ export default function ProfilePage() {
                     </div>
                   )}
                 </div>
+
+                {/* Achievements Section */}
+                <div className="mt-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-medium text-datequest-teal-700">Your Achievements</h3>
+                    <Link href="/achievements">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 px-2 text-datequest-teal-500 hover:bg-datequest-teal-50 text-center"
+                      >
+                        <Award className="h-4 w-4 mr-1" /> View All
+                      </Button>
+                    </Link>
+                  </div>
+
+                  {/* Earned Achievements */}
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium text-gray-600 mb-2">Earned ({earnedAchievements.length})</h4>
+                    <div className="grid grid-cols-3 gap-3">
+                      {earnedAchievements.map((achievement) => (
+                        <div key={achievement.id} className="flex flex-col items-center text-center">
+                          <AchievementBadge
+                            id={achievement.id}
+                            name={achievement.name}
+                            description={achievement.description}
+                            icon={achievement.icon}
+                            color={achievement.color}
+                            isEarned={true}
+                            size="sm"
+                          />
+                          <p className="text-xs mt-1 font-medium text-gray-700 truncate w-full">{achievement.name}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Unlockable Achievements */}
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-2">
+                      Unlockable ({unlockableAchievements.length})
+                    </h4>
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <div className="grid grid-cols-1 gap-2">
+                        {unlockableAchievements.slice(0, 3).map((achievement) => (
+                          <div key={achievement.id} className="flex items-center">
+                            <div
+                              className={`w-8 h-8 rounded-full ${achievement.color} flex items-center justify-center mr-2`}
+                            >
+                              <Lock className="h-4 w-4 text-white" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">{achievement.name}</p>
+                              <p className="text-xs text-gray-500">{achievement.description}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      {unlockableAchievements.length > 3 && (
+                        <Button
+                          variant="ghost"
+                          className="w-full mt-2 text-sm text-datequest-teal-500 hover:bg-datequest-teal-50"
+                          onClick={() => {}}
+                        >
+                          Show {unlockableAchievements.length - 3} more
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
                 <div className="mt-6">
                   <div className="flex justify-between items-center mb-2">
                     <h3 className="font-medium text-datequest-teal-700">Social Media</h3>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-8 px-2 text-datequest-teal-500 hover:bg-datequest-teal-50 text-center"
+                      className="h-8 px-2 text-white bg-datequest-teal-500 hover:bg-datequest-teal-600 text-center"
+                      onClick={handleConnectInstagram}
                     >
                       <svg className="h-4 w-4 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -291,7 +441,7 @@ export default function ProfilePage() {
                           strokeLinejoin="round"
                         />
                       </svg>
-                      Connect
+                      Instagram
                     </Button>
                   </div>
 
