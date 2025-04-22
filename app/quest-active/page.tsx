@@ -118,7 +118,7 @@ export default function QuestActivePage() {
         <div className="w-full max-w-md mx-auto z-10">
           <Card className="w-full overflow-hidden border-2 border-datequest-dark mb-6">
             <CardContent className="p-0">
-              <div className="bg-datequest-dark p-4 text-white">
+              <div className="bg-datequest-dark p-4 text-black">
                 <div className="flex items-center gap-3 mb-2">
                   <MapPin className="h-5 w-5 shrink-0" />
                   <div>
@@ -215,6 +215,7 @@ export default function QuestActivePage() {
                   onComplete={handleCardComplete}
                   cardNumber={currentCard + 1}
                   totalCards={questCards.length}
+                  isActive={true}
                 />
               </motion.div>
             )}

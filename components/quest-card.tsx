@@ -13,6 +13,10 @@ interface QuestCardProps {
   description: string
   category: "creative" | "social" | "adventure"
   points: number
+  image?: string
+  isActive?: boolean
+  isCompleted?: boolean
+  onSelect?: () => void
   onComplete: () => void
   cardNumber?: number
   totalCards?: number
@@ -24,12 +28,15 @@ export default function QuestCard({
   description,
   category,
   points,
+  image,
+  isActive = false,
+  isCompleted = false,
+  onSelect,
   onComplete,
   cardNumber = 1,
   totalCards = 3,
 }: QuestCardProps) {
   const [flipped, setFlipped] = useState(false)
-  const [completed, setCompleted] = useState(false)
   const [showCompletionAnimation, setShowCompletionAnimation] = useState(false)
 
   // Category-based styling
@@ -64,8 +71,7 @@ export default function QuestCard({
   }
 
   const handleComplete = () => {
-    if (!completed) {
-      setCompleted(true)
+    if (!isCompleted) {
       setShowCompletionAnimation(true)
 
       // Hide completion animation after a delay
@@ -79,8 +85,17 @@ export default function QuestCard({
     }
   }
 
+  const handleCardClick = () => {
+    if (onSelect && !isActive && !isCompleted) {
+      onSelect()
+    }
+  }
+
   return (
-    <div className="perspective-1000 w-full relative">
+    <div
+      className={`perspective-1000 w-full relative ${isCompleted ? "opacity-70" : ""} ${!isActive && !isCompleted && onSelect ? "cursor-pointer" : ""}`}
+      onClick={handleCardClick}
+    >
       {/* Completion animation overlay */}
       {showCompletionAnimation && (
         <motion.div
@@ -122,9 +137,18 @@ export default function QuestCard({
                   <h3 className={`font-bold text-2xl mb-4 ${currentStyle.textColor}`}>{title}</h3>
                   <p className={`${currentStyle.textColor} opacity-90 mb-6`}>Tap to reveal your quest</p>
 
-                  <Button className="mt-4 bg-white text-black hover:bg-gray-100" onClick={handleFlip}>
-                    Reveal Quest
-                  </Button>
+                  {isActive && (
+                    <Button className="mt-4 bg-white text-black hover:bg-gray-100" onClick={handleFlip}>
+                      Reveal Quest
+                    </Button>
+                  )}
+
+                  {isCompleted && (
+                    <div className="mt-4 bg-white/80 px-4 py-2 rounded-full flex items-center">
+                      <CheckCircle2 className="h-5 w-5 text-green-500 mr-2" />
+                      <span className="font-medium">Completed</span>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -172,9 +196,9 @@ export default function QuestCard({
                     <Button
                       className="bg-white text-black hover:bg-gray-100"
                       onClick={handleComplete}
-                      disabled={completed}
+                      disabled={isCompleted}
                     >
-                      {completed ? "Completed" : "Complete Quest"}
+                      {isCompleted ? "Completed" : "Complete Quest"}
                     </Button>
                   </div>
                 </div>

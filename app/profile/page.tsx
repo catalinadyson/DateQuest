@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import {
@@ -25,8 +27,8 @@ import { motion } from "framer-motion"
 import { AchievementBadge } from "@/components/achievement-badge"
 
 export default function ProfilePage() {
-  const [userData, setUserData] = useState(null)
-  const [interests, setInterests] = useState([])
+  const [userData, setUserData] = useState<any>(null)
+  const [interests, setInterests] = useState<string[]>([])
   const [newInterest, setNewInterest] = useState("")
   const [points, setPoints] = useState(400)
   const [level, setLevel] = useState("Novice Explorer")
@@ -100,12 +102,14 @@ export default function ProfilePage() {
 
   useEffect(() => {
     // Load user data from localStorage
-    const storedUserData = JSON.parse(localStorage.getItem("userData") || "{}")
-    setUserData(storedUserData)
+    const storedUserData = localStorage.getItem("userData")
+    if (storedUserData) {
+      setUserData(JSON.parse(storedUserData))
+    }
 
     // Set interests from stored data or use defaults
-    if (storedUserData.interests && storedUserData.interests.length > 0) {
-      setInterests(storedUserData.interests)
+    if (userData?.interests && userData.interests.length > 0) {
+      setInterests(userData.interests)
     } else {
       setInterests(["Art", "Hiking", "Coffee", "Photography", "Museums", "Live Music"])
     }
@@ -115,7 +119,7 @@ export default function ProfilePage() {
     else if (points < 1000) setLevel("Adventure Seeker")
     else if (points < 2000) setLevel("Quest Master")
     else setLevel("Legendary Dater")
-  }, [])
+  }, [userData])
 
   const handleAddInterest = () => {
     if (newInterest.trim() && !interests.includes(newInterest.trim())) {
@@ -124,11 +128,11 @@ export default function ProfilePage() {
     }
   }
 
-  const handleRemoveInterest = (interest) => {
+  const handleRemoveInterest = (interest: string) => {
     setInterests(interests.filter((i) => i !== interest))
   }
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault()
       handleAddInterest()
@@ -140,8 +144,8 @@ export default function ProfilePage() {
   }
 
   // Get personality type description
-  const getPersonalityDescription = (type) => {
-    const descriptions = {
+  const getPersonalityDescription = (type: string) => {
+    const descriptions: Record<string, string> = {
       "Creative Explorer":
         "You're imaginative and artistic, always seeking new forms of expression. You value beauty and originality in your experiences and connections.",
       "Adventure Seeker":
@@ -162,8 +166,8 @@ export default function ProfilePage() {
   }
 
   // Get budget description
-  const getBudgetDescription = (budget) => {
-    const descriptions = {
+  const getBudgetDescription = (budget: string) => {
+    const descriptions: Record<string, string> = {
       "under-20": "Under $20 per date",
       "20-50": "$20-$50 per date",
       "50-100": "$50-$100 per date",

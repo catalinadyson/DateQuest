@@ -44,8 +44,8 @@ export default function InterestSelector({ interests = [], onInterestsChange }: 
     { name: "Comedy", emoji: "😂" },
   ]
 
-  const toggleInterest = (interest) => {
-    let newInterests
+  const toggleInterest = (interest: string) => {
+    let newInterests: string[]
     if (selectedInterests.includes(interest)) {
       newInterests = selectedInterests.filter((i) => i !== interest)
     } else {
