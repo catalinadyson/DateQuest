@@ -26,7 +26,7 @@ export default function QuestActivePage() {
       title: "Art Exploration",
       description:
         "Find your favorite artwork and explain why it resonates with you. Take a selfie with your date and the artwork to capture the moment.",
-      category: "creative",
+      category: "creative" as const,
       points: 75,
     },
     {
@@ -34,7 +34,7 @@ export default function QuestActivePage() {
       title: "Creative Connection",
       description:
         "Find two contrasting artworks and ask your date which they prefer and why. Create a story together about one of the pieces that caught your attention.",
-      category: "social",
+      category: "social" as const,
       points: 85,
     },
     {
@@ -42,7 +42,7 @@ export default function QuestActivePage() {
       title: "Reflection & Connection",
       description:
         "Find a quiet spot to sit and talk. Share your impressions of the museum and what you've learned about each other. Suggest ideas for your next adventure together.",
-      category: "adventure",
+      category: "adventure" as const,
       points: 65,
     },
   ]
@@ -118,7 +118,7 @@ export default function QuestActivePage() {
         <div className="w-full max-w-md mx-auto z-10">
           <Card className="w-full overflow-hidden border-2 border-datequest-dark mb-6">
             <CardContent className="p-0">
-              <div className="bg-datequest-dark p-4 text-black">
+              <div className="bg-datequest-dark p-4 text-white">
                 <div className="flex items-center gap-3 mb-2">
                   <MapPin className="h-5 w-5 shrink-0" />
                   <div>
@@ -210,7 +210,7 @@ export default function QuestActivePage() {
                   id={questCards[currentCard].id}
                   title={questCards[currentCard].title}
                   description={questCards[currentCard].description}
-                  category={questCards[currentCard].category as "creative" | "social" | "adventure"}
+                  category={questCards[currentCard].category}
                   points={questCards[currentCard].points}
                   onComplete={handleCardComplete}
                   cardNumber={currentCard + 1}

@@ -14,8 +14,8 @@ interface QuestCardProps {
   category: "creative" | "social" | "adventure"
   points: number
   onComplete: () => void
-  cardNumber: number
-  totalCards: number
+  cardNumber?: number
+  totalCards?: number
 }
 
 export default function QuestCard({
@@ -25,8 +25,8 @@ export default function QuestCard({
   category,
   points,
   onComplete,
-  cardNumber,
-  totalCards,
+  cardNumber = 1,
+  totalCards = 3,
 }: QuestCardProps) {
   const [flipped, setFlipped] = useState(false)
   const [completed, setCompleted] = useState(false)
